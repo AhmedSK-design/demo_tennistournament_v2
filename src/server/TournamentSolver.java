@@ -1,14 +1,19 @@
+
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
+import org.springframework.stereotype.Component; // Wichtig!
 
 import java.util.*;
 
 /**
  * Runde mit hoher (weicher) Priorität: keine Partner-Wiederholungen; dann Gegner; dann Skill; dann Mixed.
  * NEU: Option, um Mixed-Doppel zu erzwingen.
+ *
+ * DIESE KLASSE IST JETZT EINE SPRING @Component BEAN
  */
+@Component // <-- HIER HINZUGEFÜGT
 public class TournamentSolver {
 
     public Runde solveRunde(int rundenNummer, List<Spieler> spielerInRunde, boolean forceMixed) {
@@ -241,7 +246,7 @@ public class TournamentSolver {
             }
         } else {
             System.out.println("Keine Lösung für Runde " + rundenNummer + " gefunden.");
-            return null;
+            return null; // Wichtig: null zurückgeben, damit der Controller es handhaben kann
         }
 
         return runde;
