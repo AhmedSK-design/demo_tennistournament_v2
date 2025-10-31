@@ -5,29 +5,59 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [numPlayers, setNumPlayers] = useState(0)
+  const [players, setPlayers] = useState<{ id: number; name: string }[]>([])
+  const [showSetup, setShowSetup] = useState(true);
+  const [showback, setShowback] = useState(false);
+
+
+  const backbutton = () => {
+    setShowback(false);
+    setShowSetup(true);
+  };
+
+  const handleAddPlayers = () => {
+    const newPlayers = Array.from({ length: numPlayers }, (_, i) => ({
+      id: i,
+      name: "",
+    }));
+    setPlayers(newPlayers);
+    setShowSetup(false);
+    setShowback(true);
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className='header'>
+      <h1>Tennis Tournament</h1>
+    </div>
+      {showSetup &&(
+        <div className="card">
+        <input type="text" placeholder="How many players" onChange={(e) => setNumPlayers(parseInt(e.target.value) || 0)} />
+          
+      <div className='button'>
+        <button onClick={handleAddPlayers}>Add Player</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      )}
+
+      {showback && (
+        <div className='Players'>
+        {players.map((player, i) => (
+          <input
+            key={player.id}
+            type="text"
+            placeholder={`Enter player ${i + 1} name`}
+          />
+        ))}
+        <button onClick={backbutton}>Back</button>
+      </div>
+      )}
+
+    
+
+    
+      
     </>
   )
 }
