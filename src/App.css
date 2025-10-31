@@ -18,7 +18,7 @@
   align-items: center;
   justify-content: center;
   padding: 5px 0;
-  font-size: 1rem; /* klarere Größe statt calc() */
+  font-size: 0.5rem; /* klarere Größe statt calc() */
   font-weight: 50;
   color: #fff;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Text leicht betont */
@@ -33,7 +33,10 @@
 
 
 .card {
-  padding: 2em;
+  margin-top: 60px; /* genau so hoch wie der Header */
+  padding: 20px;
+  align-items: center;
+
 }
 
 .button {
