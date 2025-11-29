@@ -2,67 +2,40 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import Mainpage from './Mainpage'
+import HandlePlayer from './handlePlayer'
 
 function App() {
   const [numPlayers, setNumPlayers] = useState(0)
   const [players, setPlayers] = useState<{ id: number; name: string }[]>([])
   const [showSetup, setShowSetup] = useState(true);
   const [showback, setShowback] = useState(false);
+  const [page, setPage] = useState<"Mainpage" | "handlePlayer">("Mainpage");
+  const [sharedData, setSharedData] = useState<any>(null);
 
+  const switchToLayout2 = () => setPage("handlePlayer");
+  const switchToLayout1 = () => setPage("Mainpage");
 
-  const backbutton = () => {
-    setShowback(false);
-    setShowSetup(true);
-  };
+  const resetAll = () => {
+  setPage("Mainpage");
+  setSharedData(null);
+  setNumPlayers(0);
+  setPlayers([]);
+};
 
-  const handleAddPlayers = () => {
-    if (numPlayers > 3){
-    const newPlayers = Array.from({ length: numPlayers }, (_, i) => ({
-      id: i,
-      name: "",
-    }));
-    setPlayers(newPlayers);
-    setShowSetup(false);
-    setShowback(true);
-  }
-  }
 
   return (
     <>
-    <div className='header'>
-      <h1>Tennis Tournament</h1>
-    </div>
-
-
-      {showSetup &&(
-        <div className="card">
-        <h2>Create a new Tournament</h2>
-        <input type="text" placeholder="How many players" onChange={(e) => 
-          setNumPlayers(parseInt(e.target.value) || 0)} />          
-      <div className='button'>
-        <button onClick={handleAddPlayers}>Add Player</button>
-      </div>
-      </div>
+    {page === "Mainpage" && (
+        <Mainpage openNext={() => setPage("handlePlayer")}
+        sendToApp={(val) => setSharedData(val)} />
       )}
-
-      {showback && (
-        <div className='Players'>
-          <h3>Player information</h3>
-        {players.map((player, i) => (
-          <input
-            key={player.id}
-            type="text"
-            placeholder={`Enter player ${i + 1} name`}
-          />
-
-        ))}
-        <button onClick={backbutton}>Back</button>
-      </div>
+      {page === "handlePlayer" && (
+        <HandlePlayer
+          openPrev={() => resetAll()}
+          dataFromLayout1={sharedData}
+        />
       )}
-
-    
-
-    
       
     </>
   )

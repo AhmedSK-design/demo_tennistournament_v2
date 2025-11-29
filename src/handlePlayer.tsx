@@ -1,11 +1,16 @@
 import App from "./App";
 
-function handleAddPlayers() {
+export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () => void; dataFromLayout1: { id: number; name: string }[];}) {
+
+
+
   return(
     
         <div className='Players'>
-          <h3>Player information</h3>
-        {players.map((player, i) => (
+        <div> 
+        <h1>Enter Player information</h1>
+        </div>
+        {dataFromLayout1.map((player, i) => (
           <input
             key={player.id}
             type="text"
@@ -13,9 +18,10 @@ function handleAddPlayers() {
           />
 
         ))}
-        <button onClick={backbutton}>Back</button>
+        <div className='button'>
+        <button onClick={openPrev}>Back</button>
+        </div>
       </div>
+      
   )
 }
-
-export default handleAddPlayers;

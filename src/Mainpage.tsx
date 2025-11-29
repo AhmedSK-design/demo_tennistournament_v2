@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Mainpage() {
+export default function Mainpage({openNext,sendToApp}: { openNext: () => void ; sendToApp: (val: { id: number; name: string }[]) => void }) {
     const [numPlayers, setNumPlayers] = useState(0)
     const [players, setPlayers] = useState<{ id: number; name: string }[]>([])
     
@@ -12,6 +12,7 @@ function Mainpage() {
       name: "",
     }));
     setPlayers(newPlayers);
+    sendToApp(newPlayers);
   }
   }
 
@@ -20,15 +21,11 @@ function Mainpage() {
     <div className='header'>
       <h1>Tennis Tournament</h1>
     </div>
-
-        <div className="card">
-        <h2>Create a new Tournament</h2>
-        <input type="text" placeholder="How many players" onChange={(e) => 
-          setNumPlayers(parseInt(e.target.value) || 0)} />          
+    <div className="card">
       <div className='button'>
-        <button onClick={handleAddPlayers}>Add Player</button>
+        <button onClick={() =>{openNext();}}>Start</button>
       </div>
-      </div>
+    </div>
     </>
     );
 }
