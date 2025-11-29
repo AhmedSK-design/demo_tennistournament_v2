@@ -9,8 +9,9 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <!-- Prefer using the release flag via the compiler plugin configuration below; keep source/target for tooling that reads the properties -->
         <choco-solver.version>4.10.10</choco-solver.version>
     </properties>
 
@@ -34,6 +35,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
+                <configuration>
+                    <!-- Use Java 21 release to ensure correct JDK APIs and bytecode level -->
+                    <release>21</release>
+                </configuration>
             </plugin>
             
             <plugin>
