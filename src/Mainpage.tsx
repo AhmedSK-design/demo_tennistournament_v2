@@ -1,20 +1,7 @@
 import { useState } from "react";
 
-export default function Mainpage({openNext,sendToApp}: { openNext: () => void ; sendToApp: (val: { id: number; name: string }[]) => void }) {
-    const [numPlayers, setNumPlayers] = useState(0)
-    const [players, setPlayers] = useState<{ id: number; name: string }[]>([])
-    
+export default function Mainpage({openNext}: { openNext: () => void }) {
 
-    const handleAddPlayers = () => {
-    if (numPlayers > 3){
-    const newPlayers = Array.from({ length: numPlayers }, (_, i) => ({
-      id: i,
-      name: "",
-    }));
-    setPlayers(newPlayers);
-    sendToApp(newPlayers);
-  }
-  }
 
     return (
         <>
