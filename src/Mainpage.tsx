@@ -18,12 +18,13 @@ export default function Mainpage({openNext,sendToApp}: { openNext: () => void ; 
 
     return (
         <>
+
     <div className='header'>
       <h1>Tennis Tournament</h1>
     </div>
-    <div className="card">
+    <div className='button-middle-container'>
       <div className='button'>
-        <button onClick={() =>{openNext();}}>Start</button>
+      <button onClick={() =>{openNext();}}>Start a new Tournament</button>
       </div>
     </div>
     </>

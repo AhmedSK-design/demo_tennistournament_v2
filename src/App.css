@@ -1,8 +1,8 @@
 #root {
   max-width: 1280px;
-  margin: 0 auto;
+  margin: 0 ;
   padding: 2rem;
-  text-align: center;
+  
 }
 
 .header {
@@ -23,21 +23,114 @@
   color: #fff;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Text leicht betont */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* dezenter Schatten unten */
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
+  border-bottom-left-radius: 1px;
+  border-bottom-right-radius: 1px;
   letter-spacing: 0.5px;
 
 }
 
-
-
-
-.card {
-  margin-top: 60px; /* genau so hoch wie der Header */
-  padding: 20px;
-  align-items: center;
-
+.mini-window {
+  display: flex;
+  flex-direction: column; /* Stapelt alles untereinander */
+  gap: 10px;              /* Abstand zwischen Elementen */
 }
+
+.small-window {
+  position: absolute;
+  top: 90px;      /* Abstand vom Header */
+  left: 20px;     /* leicht vom Rand */
+  
+  width: 500px;
+  padding: 15px;
+  border-radius: 10px;
+
+  background: #9492928e; /* leicht durchsichtig */
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 1px solid #ccc;
+}
+
+.small-below-window {
+  position: absolute;
+  top: 330px;      /* Abstand vom Header */
+  left: 20px;     /* leicht vom Rand */
+  
+  width: 500px;
+  padding: 15px;
+  border-radius: 10px;
+
+  background: #9492928e; /* leicht durchsichtig */
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 1px solid #ccc;
+}
+
+.player-list {
+  display: flex;
+  flex-direction: column; /* untereinander */
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.player-box {
+  position: relative;       /* Referenzpunkt für absolute Positionierung */
+  display: flex;
+  gap: 20px;
+  align-items: center;      /* vertikal zentriert */
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+}
+
+.player-delete {
+  position: absolute;
+  top: 2px;     /* Abstand von oben */
+  right: 2px;   /* Abstand von rechts */
+}
+
+
+
+
+.back-button{
+  border: none;
+  cursor: pointer;
+  margin: 10px;
+  font-size: 20px;
+  color: white;
+  will-change: filter;
+  transition: filter 100ms;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: solid 1px #555555;
+  
+}
+
+.button-bottom-container {
+  position: fixed;       /* bleibt immer sichtbar */
+  bottom: 20px;          /* Abstand vom unteren Rand */
+  left: 50%;             /* horizontale Mitte */
+  transform: translateX(-50%);  /* wirklich zentrieren */
+  
+  display: flex;
+  gap: 20px;             /* Abstand zwischen Buttons */
+}
+
+.button-middle-container {
+  position: fixed;        /* immer an der gleichen Stelle */
+  top: 50%;               /* vertikal mittig */
+  left: 50%;              /* horizontal mittig */
+  transform: translate(-50%, -50%); /* echte Mitte statt oben links */
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;              /* Abstand zwischen Buttons */
+}
+
 
 .button {
   border: none;
@@ -49,16 +142,12 @@
   will-change: filter;
   transition: filter 100ms;
   border: 1px solid #555555;
+  align-items: center;
+  justify-content: center;
 }
 .button:hover {
   filter: drop-shadow(0 0 1em #646cffaa);
 }
 
-.Players {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 
-}
 
