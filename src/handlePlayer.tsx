@@ -4,7 +4,7 @@ import type { Spieler } from "./main/JS_Objects/Spieler.js";
 export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () => void;dataFromLayout1: { id: number; name: string }[];}) {
   const [selectedGender, setSelectedGender] = useState("");
   const [name, setName] = useState("");
-  const [Spielstärke, setSpielstärke] = useState(5);
+  const [Spielstärke, setSpielstärke] = useState(0);
   const [players, setPlayers] =useState<Spieler[]>([]);
   const [tennisCourts, setTennisCourts] = useState(1);
   const [rounds, setRounds] = useState(1);
@@ -35,7 +35,6 @@ export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () =
     setPlayers([...players, newPlayer]);
     // Eingabefelder zurücksetzen
     setName("");
-    setSpielstärke(5);
     // Behalten Sie die letzte Auswahl oder setzen Sie auf Standard
     // setSelectedGender(""); // Nicht zurücksetzen, um Nutzereingabe zu beschleunigen
   }
@@ -63,7 +62,7 @@ export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () =
              <h3>Spielerdaten eingeben</h3>
               <div className="mini-window">
                 <input type="text" placeholder="Player Name" value={name} onChange={(e) => setName(e.target.value)} maxLength={12} />
-                <input type="number" placeholder="Spielstärke 1 - 10" min={1} max={10} value={Spielstärke} onChange={(e) => setSpielstärke(Number(e.target.value))} />
+                <input type="number" placeholder="Spielstärke 1 - 10" min={1} max={10} onChange={(e) => setSpielstärke(Number(e.target.value))} />
                 <label>
                   <select value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
                     <option value="" disabled>Geschlecht</option>
@@ -96,10 +95,10 @@ export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () =
         <div className="big-right-window">
           <h3>Turnierparameter</h3>
           <div className="mini-window-right">
-          <input type="number" placeholder="Anzahl Tennisplätze" min={1} value={tennisCourts} onChange={(e) => setTennisCourts(Number(e.target.value))} />
-          <input type="number" placeholder="Anzahl Runden" min={1} value={rounds} onChange={(e) => setRounds(Number(e.target.value))} />
-          <input type="number" placeholder="Spiellänge" min={1} value={gameLength} onChange={(e) => setGameLength(Number(e.target.value))} />
-          <input type="number" placeholder="Pausenlänge" min={1} value={breakLength} onChange={(e) => setBreakLength(Number(e.target.value))} />
+          <input type="number" placeholder="Anzahl Tennisplätze" min={1} onChange={(e) => setTennisCourts(Number(e.target.value))} />
+          <input type="number" placeholder="Anzahl Runden" min={1} onChange={(e) => setRounds(Number(e.target.value))} />
+          <input type="number" placeholder="Spiellänge" min={1} onChange={(e) => setGameLength(Number(e.target.value))} />
+          <input type="number" placeholder="Pausenlänge" min={1} onChange={(e) => setBreakLength(Number(e.target.value))} />
           </div>
         </div>
       </div>
