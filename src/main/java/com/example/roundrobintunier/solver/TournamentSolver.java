@@ -1,4 +1,9 @@
+package com.example.roundrobintunier.solver;
 
+import com.example.roundrobintunier.model.Runde;
+import com.example.roundrobintunier.model.Spieler;
+import com.example.roundrobintunier.model.Team;
+import com.example.roundrobintunier.model.Match;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;

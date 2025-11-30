@@ -1,3 +1,5 @@
+package com.example.roundrobintunier.model;
+
 public class Team {
     private final Spieler spieler1;
     private final Spieler spieler2;

@@ -34,7 +34,7 @@ public class TournamentController {
                     request.getSpielerInRunde(),
                     request.isForceMixed()
             );
-
+            
             // Prüfen, ob der Solver eine Lösung gefunden hat (null zurückgegeben)
             if (ergebnis == null) { 
                 // Sende einen "422 Unprocessable Entity" Status, wenn keine Lösung gefunden wurde

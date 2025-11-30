@@ -1,3 +1,5 @@
+package com.example.roundrobintunier.model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class Runde {
     public List<Match> getSpiele() { return matches; } // Alias
 
     public void addMatch(Match match) { matches.add(match); }
+
 
     @Override
     public String toString() {

@@ -1,3 +1,5 @@
+package com.example.roundrobintunier.model;
+
 public class MatchResult {
     private int team1Score;
     private int team2Score;
