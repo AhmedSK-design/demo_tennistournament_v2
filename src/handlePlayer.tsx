@@ -108,6 +108,9 @@ export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () =
         <div className="back-button">
           <button onClick={openPrev}>Back</button>
         </div>
+        <div className="back-button">
+        <button onClick={openPrev}>Start</button>
+        </div>
       </div>
     </>
   );

@@ -119,6 +119,7 @@
 
 
 
+
 .back-button{
   border: none;
   cursor: pointer;
@@ -140,8 +141,7 @@
   left: 50%;             /* horizontale Mitte */
   transform: translateX(-50%);  /* wirklich zentrieren */
   
-  display: flex;
-  gap: 20px;             /* Abstand zwischen Buttons */
+  display: flex;             /* Abstand zwischen Buttons */
 }
 
 .button-middle-container {

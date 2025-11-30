@@ -27,8 +27,7 @@ function App() {
   return (
     <>
     {page === "Mainpage" && (
-        <Mainpage openNext={() => setPage("handlePlayer")}
-        sendToApp={(val) => setSharedData(val)} />
+        <Mainpage openNext={() => setPage("handlePlayer")} />
       )}
       {page === "handlePlayer" && (
         <HandlePlayer
