@@ -49,16 +49,16 @@ export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () =
       <div className="small-window">
         <h3>Enter Player information</h3>
         <div className="mini-window">
-        <input type="text" placeholder="Player Name" value={name} onChange={(e) => setName(e.target.value)} maxLength={12} />
-        <input type="number" placeholder="Spielstärke 1 - 10" min={1} max={10} value={Spielstärke} onChange={(e) => setSpielstärke(Number(e.target.value))} />
-        <label>
-          <select value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
-          <option value="" disabled>Geschlecht</option>
-          <option value="M">M</option>
-          <option value="W">W</option>
-          </select>
-        </label>
-        <button onClick={handleAddPlayer}>+ Hinzufügen</button>
+          <input type="text" placeholder="Player Name" value={name} onChange={(e) => setName(e.target.value)} maxLength={12} />
+          <input type="number" placeholder="Spielstärke 1 - 10" min={1} max={10} value={Spielstärke} onChange={(e) => setSpielstärke(Number(e.target.value))} />
+          <label>
+            <select value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
+              <option value="" disabled>Geschlecht</option>
+              <option value="M">M</option>
+              <option value="W">W</option>
+            </select>
+          </label>
+          <button onClick={handleAddPlayer}>+ Hinzufügen</button>
         </div>
       </div>
 
@@ -67,17 +67,20 @@ export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () =
       <div className="player-list">
         {players.map((player) => (
           <div key={player.id} className="player-box">
-          <span>Name: {player.name}</span>
-          <span> Stärke: {player.spielstärke}</span>
-          <span> Geschlecht: {player.gender} </span>
+            <span>Name: {player.name}</span>
+            <span> Stärke: {player.spielstärke}</span>
+            <span> Geschlecht: {player.gender} </span>
           <div className="player-delete">
           <button onClick={() => handleRemovePlayer(player.id)}>Entfernen</button>
           </div>
-      </div>
-    ))}
-  </div>
-</div>
+        </div>
+     ))}
+    </div>
+    </div>
 
+    <div className="big-right-window">
+      
+    </div>
 
 
       <div className="button-bottom-container">

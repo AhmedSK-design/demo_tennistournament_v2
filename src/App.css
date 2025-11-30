@@ -67,6 +67,23 @@
   border: 1px solid #ccc;
 }
 
+.big-right-window{
+  position: absolute;
+  top: 90px;      /* Abstand vom Header */
+  left: 560px;     /* leicht vom Rand */
+  
+  width: 850px;
+  padding: 15px;
+  border-radius: 10px;
+
+  background: #9492928e; /* leicht durchsichtig */
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 1px solid #ccc;
+
+}
+
 .player-list {
   display: flex;
   flex-direction: column; /* untereinander */
