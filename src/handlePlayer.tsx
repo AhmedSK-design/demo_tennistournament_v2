@@ -1,11 +1,15 @@
 import { useState } from "react";
-import App from "./App";
+import type { Spieler } from "./main/JS_Objects/Spieler.js";
 
 export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () => void;dataFromLayout1: { id: number; name: string }[];}) {
   const [selectedGender, setSelectedGender] = useState("");
   const [name, setName] = useState("");
   const [Spielstärke, setSpielstärke] = useState(5);
-  const [players, setPlayers] = useState<{ id: number; name: string; gender: string; spielstärke: number }[]>([])
+  const [players, setPlayers] =useState<Spieler[]>([]);
+  const [tennisCourts, setTennisCourts] = useState(1);
+  const [rounds, setRounds] = useState(1);
+  const [gameLength, setGameLength] = useState(1);
+  const [breakLength, setBreakLength] = useState(1);
 
   function handleAddPlayer() {
     // Funktion zum Hinzufügen eines Spielers
@@ -22,8 +26,8 @@ export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () =
         alert("Bitte wählen Sie das Geschlecht aus.");
         return;
     }
-    const newPlayer = {
-      id: players.length,
+    const newPlayer: Spieler = {
+      id: players.length + 1,
       name: name,
       gender: selectedGender,
       spielstärke: Spielstärke
@@ -90,8 +94,13 @@ export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () =
         
         {/* Rechte Spalte: Das große Fenster */}
         <div className="big-right-window">
-          <h3>Turnier-Übersicht</h3>
-          {/* Fügen Sie hier Ihre Turnier- oder Bracket-Ansicht ein */}
+          <h3>Turnierparameter</h3>
+          <div className="mini-window-right">
+          <input type="number" placeholder="Anzahl Tennisplätze" min={1} value={tennisCourts} onChange={(e) => setTennisCourts(Number(e.target.value))} />
+          <input type="number" placeholder="Anzahl Runden" min={1} value={rounds} onChange={(e) => setRounds(Number(e.target.value))} />
+          <input type="number" placeholder="Spiellänge" min={1} value={gameLength} onChange={(e) => setGameLength(Number(e.target.value))} />
+          <input type="number" placeholder="Pausenlänge" min={1} value={breakLength} onChange={(e) => setBreakLength(Number(e.target.value))} />
+          </div>
         </div>
       </div>
 

@@ -29,6 +29,11 @@
 
 }
 
+.mini-window-right {
+  display: flex;
+  flex-direction: column; /* Stapelt alles untereinander */
+  gap: 50px;              /* Abstand zwischen Elementen */
+}
 
 
 .mini-window {
@@ -75,6 +80,7 @@
   left: 560px;     /* leicht vom Rand */
   
   width: 850px;
+  height: 500px;
   padding: 15px;
   border-radius: 10px;
 
