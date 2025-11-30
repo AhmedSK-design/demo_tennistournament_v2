@@ -2,7 +2,7 @@ import { useState } from "react";
 import App from "./App";
 
 export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () => void;dataFromLayout1: { id: number; name: string }[];}) {
-  const [selectedGender, setSelectedGender] = useState("M");
+  const [selectedGender, setSelectedGender] = useState("");
   const [name, setName] = useState("");
   const [Spielstärke, setSpielstärke] = useState(5);
   const [players, setPlayers] = useState<{ id: number; name: string; gender: string; spielstärke: number }[]>([])
@@ -52,8 +52,8 @@ export default function HandlePlayer({openPrev,dataFromLayout1}: {openPrev: () =
         <input type="text" placeholder="Player Name" value={name} onChange={(e) => setName(e.target.value)} maxLength={12} />
         <input type="number" placeholder="Spielstärke 1 - 10" min={1} max={10} value={Spielstärke} onChange={(e) => setSpielstärke(Number(e.target.value))} />
         <label>
-        Geschlecht:
           <select value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
+          <option value="" disabled>Geschlecht</option>
           <option value="M">M</option>
           <option value="W">W</option>
           </select>
