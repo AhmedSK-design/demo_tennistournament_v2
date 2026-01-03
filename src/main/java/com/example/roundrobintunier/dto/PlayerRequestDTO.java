@@ -1,4 +1,8 @@
 package com.example.roundrobintunier.dto;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Data Transfer Object für die Spielerdaten aus dem Frontend-Request.
  */
@@ -6,6 +10,8 @@ public class PlayerRequestDTO {
     private String name;
     private String geschlecht; 
     private int spielstaerke;   // Werte von 1 bis 10
+    private List<String> bisherigePartner = new ArrayList<>();
+    private List<String> bisherigeGegner = new ArrayList<>();
 
     // Standardkonstruktor für JSON-Deserialisierung (wichtig für Spring)
     public PlayerRequestDTO() {}
