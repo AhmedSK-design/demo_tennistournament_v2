@@ -1,23 +1,23 @@
 package com.example.roundrobintunier.solver;
 
-import com.example.roundrobintunier.model.Runde;
-import com.example.roundrobintunier.model.Spieler;
-import com.example.roundrobintunier.model.Team;
-import com.example.roundrobintunier.model.Match;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
-import org.springframework.stereotype.Component; // Wichtig!
+import org.springframework.stereotype.Component; // NEU: Import für Spring
+
+import com.example.roundrobintunier.model.Match;
+import com.example.roundrobintunier.model.Runde;
+import com.example.roundrobintunier.model.Spieler;
+import com.example.roundrobintunier.model.Team;
 
 import java.util.*;
 
 /**
  * Runde mit hoher (weicher) Priorität: keine Partner-Wiederholungen; dann Gegner; dann Skill; dann Mixed.
  * NEU: Option, um Mixed-Doppel zu erzwingen.
- *
- * DIESE KLASSE IST JETZT EINE SPRING @Component BEAN
+ * Jetzt als Spring Component annotiert.
  */
-@Component // <-- HIER HINZUGEFÜGT
+@Component // NEU: Damit Spring diese Klasse als Bean erkennt und verwalten kann
 public class TournamentSolver {
 
     public Runde solveRunde(int rundenNummer, List<Spieler> spielerInRunde, boolean forceMixed) {
@@ -250,7 +250,7 @@ public class TournamentSolver {
             }
         } else {
             System.out.println("Keine Lösung für Runde " + rundenNummer + " gefunden.");
-            return null; // Wichtig: null zurückgeben, damit der Controller es handhaben kann
+            return null;
         }
 
         return runde;
