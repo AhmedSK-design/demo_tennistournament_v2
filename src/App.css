@@ -1,235 +1,329 @@
-#root {
-  width: 100%;
+/* =========================================
+   GLOBAL RESET & BASIS
+   ========================================= */
+:root {
+  --bg-dark: #242424;
+  --bg-card: #2a2a2a;
+  --bg-input: #1a1a1a;
+  --text-main: #ffffff;
+  --text-muted: #aaaaaa;
+  --accent-gradient: linear-gradient(90deg, #ff8c00 0%, #ff0080 100%);
+  --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 4px 15px rgba(255, 0, 128, 0.4);
+}
+
+html, body, #root {
+  height: 100%;
   margin: 0;
   padding: 0;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  overflow: hidden; /* Verhindert Scrollen des Body, nur Container scrollt */
 }
 
-/* Header */
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 80px;
-  z-index: 1000;
-  background: linear-gradient(135deg, #5f95ff, #3a6ff7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+h1, h2, h3 {
+  margin: 0;
 }
 
-/* Container für die Fenster (HandlePlayer Seite) */
-.windows-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;         /* Boxen rutschen bei Platzmangel untereinander */
-  justify-content: center; /* Zentriert die Fenster auf dem Schirm */
-  gap: 30px;
-  padding: 120px 20px 100px 20px;
-  width: 100%;
-  box-sizing: border-box;
+/* --- Match Card Updates --- */
+.match-card {
+  /* ... existierende Styles ... */
+  gap: 10px; /* Mehr Abstand zwischen den Elementen */
 }
 
-/* Spalten-Logik */
-.left-column {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  flex: 1;
-  min-width: 320px;
-  max-width: 500px;
-}
-
-/* Fenster-Karten (KEIN position: absolute mehr) */
-.small-window, .small-below-window, .big-right-window {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 25px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  color: #333;
-}
-
-.big-right-window {
-  flex: 1.5;
-  min-width: 350px;
-  max-width: 800px;
-}
-
-/* Startseiten-Zentrierung (Mainpage) */
-.button-middle-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; /* Nutzt die volle Höhe für die Mitte */
-  width: 100%;
-  padding-top: 80px; /* Platz für den Header */
-}
-
-.button-middle-container button {
-  font-size: 1.5rem;
-  padding: 1rem 2rem;
-}
-
-/* Navigation unten (HandlePlayer Seite) */
-.button-bottom-container {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 80px;
-  background: white;
-  border-top: 1px solid #ddd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  z-index: 2000;
-}
-
-/* Inputs & Liste */
-.player-box {
+.match-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid #eee;
-  padding: 10px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  margin-bottom: 10px;
+  width: 100%;
 }
 
-.mini-window, .mini-window-right {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* In App.css */
-.delete-btn {
-  background-color: #ff4444; /* Helles Rot */
+.score-input {
+  width: 50px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 5px;
+  margin-left: 10px;
+  background-color: #111;
+  border: 1px solid #444;
   color: white;
-  border: none;
-  padding: 2px 8px;
-  font-size: 0.8rem;
-  border-radius: 4px; /* Sieht etwas moderner aus */
-  cursor: pointer;
-  transition: background-color 0.2s; /* Macht den Übergang weich ("filmisch") */
+  border-radius: 5px;
 }
 
-.delete-btn:hover {
-  background-color: #cc0000; /* Dunkles Rot beim Drüberfahren */
+.score-input:focus {
+  border-color: #2196f3;
+  background-color: #000;
 }
 
-/* --- Tournament Container --- */
-.tournament-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.rounds-scroll-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 40px; /* Abstand zwischen den Runden */
-}
-
-/* --- Runden Block --- */
-.round-wrapper {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.round-header {
-  background: linear-gradient(90deg, #ff8c00 0%, #ff0080 100%);
-  padding: 8px 20px;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 15px rgba(255, 0, 128, 0.4);
-  z-index: 2;
-}
-
-.round-header h3 {
+/* Entfernt die kleinen Pfeile bei Number-Inputs (Browser-spezifisch) */
+.score-input::-webkit-outer-spin-button,
+.score-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
   margin: 0;
-  color: white;
-  font-size: 1.2rem;
-  text-transform: uppercase;
+}
+.score-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* =========================================
+   MAIN LAYOUT CONTAINER (Fixiert Header/Footer)
+   ========================================= */
+.tournament-container, .App {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; 
+  width: 100%;
+  
+  /* HIER IST DIE ÄNDERUNG: */
+  max-width: 100%; /* Vorher 1200px -> Jetzt volle Breite */
+  margin: 0;       /* Ränder weg */
+  padding: 0;      /* Innenabstand weg */
+}
+
+/* --- Header --- */
+.header {
+  flex: 0 0 auto; /* Feste Höhe, schrumpft nicht */
+  padding: 20px;
+  background-color: var(--bg-dark);
+  text-align: center;
+  z-index: 10;
+  border-bottom: 1px solid #333;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.header h1 {
+  font-size: 2rem;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
   letter-spacing: 1px;
 }
 
-/* --- Matches Grid (Nebeneinander) --- */
+/* --- Footer Area --- */
+.button-bottom-container {
+  flex: 0 0 auto; /* Feste Höhe */
+  padding: 20px;
+  background-color: var(--bg-dark);
+  border-top: 1px solid #333;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  z-index: 10;
+}
+
+/* =========================================
+   SCROLLABLE CONTENT AREA
+   ========================================= */
+/* Dieser Bereich füllt den Platz zwischen Header und Footer */
+.rounds-scroll-container, .windows-container {
+  flex: 1; 
+  overflow-y: auto; /* Scrollen aktivieren */
+  padding: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: #555 var(--bg-dark);
+}
+
+/* Layout für das Setup-Fenster (2 Spalten) */
+.windows-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.left-column, .big-right-window {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.left-column { flex: 1; max-width: 400px; }
+.big-right-window { flex: 1; max-width: 400px; }
+
+/* =========================================
+   CARDS & INPUTS (Setup Screen)
+   ========================================= */
+.small-window, .small-below-window, .big-right-window {
+  background-color: var(--bg-card);
+  border: 1px solid #444;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.mini-window, .mini-window-right {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Inputs Styling */
+input, select {
+  background-color: var(--bg-input);
+  border: 1px solid #555;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+  border-color: #ff0080;
+}
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+button {
+  cursor: pointer;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  transition: transform 0.1s, background-color 0.2s;
+}
+
+button:active { transform: scale(0.98); }
+
+/* Start Button */
+.start-btn {
+  background: var(--accent-gradient);
+  color: white;
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  box-shadow: var(--shadow-glow);
+}
+
+.start-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Back Button */
+.back-btn {
+  background-color: #444;
+  color: white;
+  padding: 12px 20px;
+}
+.back-btn:hover { background-color: #555; }
+
+/* Add Button */
+.mini-window button {
+  background-color: #2196f3;
+  color: white;
+  padding: 10px;
+  margin-top: 5px;
+}
+.mini-window button:hover { background-color: #1976d2; }
+
+/* Delete Button (Hover Effekt!) */
+.delete-btn {
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.delete-btn:hover { background-color: #cc0000; }
+
+/* =========================================
+   TOURNAMENT VIEW (Runden & Matches)
+   ========================================= */
+.rounds-scroll-container {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  align-items: center;
+}
+
+.round-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Header einer Runde */
+.round-header {
+  background: var(--accent-gradient);
+  padding: 8px 25px;
+  border-radius: 50px;
+  margin-bottom: 25px;
+  box-shadow: var(--shadow-glow);
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.round-header h3 {
+  color: white;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+/* Grid für Matches */
 .matches-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
   width: 100%;
-  margin-bottom: 20px;
 }
 
+/* Match Card */
 .match-card {
-  background-color: #2a2a2a;
+  background-color: var(--bg-card);
   border: 1px solid #444;
   border-radius: 12px;
   padding: 15px;
-  width: 280px; /* Feste Breite für gleichmäßige Kacheln */
+  width: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .match-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0,0,0,0.5);
-  border-color: #666;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+  border-color: #777;
 }
 
-.team-box {
-  font-weight: bold;
-  font-size: 1.1rem;
-  text-align: center;
-}
+.team-box { font-weight: bold; font-size: 1.1rem; text-align: center; }
+.team-1 { color: #4caf50; } /* Grün */
+.team-2 { color: #2196f3; } /* Blau */
+.vs-badge { font-size: 0.8rem; color: #666; margin: 5px 0; }
 
-.team-1 { color: #4caf50; }
-.vs-badge { 
-  font-size: 0.8rem; 
-  color: #888; 
-  margin: 5px 0; 
-  font-weight: normal;
-  text-transform: uppercase;
-}
-.team-2 { color: #2196f3; }
-
-/* --- Pause Section --- */
+/* Pause Section */
 .pause-section {
   background-color: #1a1a1a;
-  border-top: 2px solid #333;
-  width: 80%;
+  border-top: 1px solid #333;
+  width: 60%;
+  min-width: 300px;
   padding: 10px 20px;
   border-radius: 0 0 15px 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -10px; /* Damit es direkt am Grid klebt */
+  margin-top: 0; /* Klebt direkt am Grid */
+  box-shadow: inset 0 5px 10px rgba(0,0,0,0.2);
 }
 
 .pause-title {
-  color: #aaa;
-  font-size: 0.9rem;
-  margin-bottom: 8px;
+  color: #666;
+  font-size: 0.8rem;
   text-transform: uppercase;
+  margin-bottom: 5px;
 }
 
 .pausing-players-list {
@@ -242,16 +336,171 @@
 .pause-badge {
   background-color: #333;
   color: #ccc;
-  padding: 4px 10px;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  border: 1px solid #555;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  border: 1px solid #444;
 }
 
-/* --- Connector Line (Der Strich zwischen den Runden) --- */
+/* Verbindungsstrich zwischen Runden */
 .round-connector {
   width: 2px;
   height: 40px;
-  background: linear-gradient(to bottom, #444, transparent);
-  margin-bottom: -40px; /* Zieht es in den Gap rein */
+  background: linear-gradient(to bottom, #444 0%, transparent 100%);
+  margin-top: 10px;
+  margin-bottom: -30px;
+}
+
+/* Scrollbar Styling (Chrome/Safari) */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #777; } 
+
+/* --- Match Card Updates --- */
+.match-card {
+  /* ... existierende Styles ... */
+  gap: 10px; /* Mehr Abstand zwischen den Elementen */
+}
+
+.match-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.score-input {
+  width: 50px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 5px;
+  margin-left: 10px;
+  background-color: #111;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 5px;
+}
+
+.score-input:focus {
+  border-color: #2196f3;
+  background-color: #000;
+}
+
+/* Entfernt die kleinen Pfeile bei Number-Inputs (Browser-spezifisch) */
+.score-input::-webkit-outer-spin-button,
+.score-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.score-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* =========================================
+   LEADERBOARD STYLES
+   ========================================= */
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 600px; /* Nicht zu breit, damit es wie eine Liste aussieht */
+  margin: 0 auto;
+}
+
+.leaderboard-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg-card);
+  padding: 15px 25px;
+  border-radius: 12px;
+  border: 1px solid #444;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s;
+}
+
+.leaderboard-card:hover {
+  transform: scale(1.02);
+  border-color: #666;
+}
+
+/* Rank Badge (1., 2., 3.) */
+.rank-badge {
+  font-size: 1.5rem;
+  font-weight: 900;
+  width: 50px;
+  text-align: center;
+  color: #666;
+}
+
+/* Player Info */
+.player-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-left: 20px;
+}
+
+.player-name-large {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+}
+
+.matches-info {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+/* Points */
+.total-points {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-main);
+  background: #333;
+  padding: 5px 15px;
+  border-radius: 8px;
+  min-width: 60px;
+  text-align: center;
+}
+
+.total-points small {
+  font-size: 0.8rem;
+  font-weight: normal;
+  display: block;
+  margin-top: -5px;
+  color: #aaa;
+}
+
+/* --- Special Colors for Top 3 --- */
+
+/* 1. Platz (Gold) */
+.rank-1 {
+  border: 2px solid #ffd700;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(20, 20, 20, 1) 100%);
+}
+.rank-1 .rank-badge, .rank-1 .total-points {
+  color: #ffd700;
+}
+
+/* 2. Platz (Silber) */
+.rank-2 {
+  border: 2px solid #c0c0c0;
+  background: linear-gradient(135deg, rgba(192, 192, 192, 0.1) 0%, rgba(20, 20, 20, 1) 100%);
+}
+.rank-2 .rank-badge, .rank-2 .total-points {
+  color: #c0c0c0;
+}
+
+/* 3. Platz (Bronze) */
+.rank-3 {
+  border: 2px solid #cd7f32;
+  background: linear-gradient(135deg, rgba(205, 127, 50, 0.1) 0%, rgba(20, 20, 20, 1) 100%);
+}
+.rank-3 .rank-badge, .rank-3 .total-points {
+  color: #cd7f32;
 }

@@ -1,13 +1,14 @@
-import type { TurnierResponse, LocalPlayer, RundeModel } from "./main/JS_Objects/types";
+import { useState, useEffect } from "react";
+import type { TurnierResponse, LocalPlayer, RundeModel } from "./main/JS_Objects/types"; 
+import LeaderboardView from "./LeaderboardView"; // <--- IMPORTIEREN
 import "./App.css";
 
-// In TournamentView.tsx
 interface TournamentViewProps {
     plan: TurnierResponse;
     allPlayers: LocalPlayer[];
-    startTime?: string;      // Startzeit (z.B. "09:00")
-    matchDuration?: number;  // Dauer eines Spiels in Minuten
-    breakDuration?: number;  // Dauer der Pause in Minuten
+    startTime?: string;
+    matchDuration?: number;
+    breakDuration?: number;
     onBack: () => void;
 }
 
@@ -15,51 +16,81 @@ export default function TournamentView({
     plan, 
     allPlayers, 
     onBack, 
-    startTime = "09:00", // Fallback, falls leer
-    matchDuration = 60,  // Fallback
-    breakDuration = 10   // Fallback
+    startTime = "09:00",
+    matchDuration = 60,
+    breakDuration = 10
 }: TournamentViewProps) {
 
-    // Hilfsfunktion: Berechnet pausierende Spieler für eine Runde
-    const getPausingPlayers = (runde: RundeModel) => {
-        const playingIds = new Set<number>();
-        runde.matches.forEach(m => {
-            playingIds.add(m.team1.spieler1.id);
-            playingIds.add(m.team1.spieler2.id);
-            playingIds.add(m.team2.spieler1.id);
-            playingIds.add(m.team2.spieler2.id);
-        });
-        return allPlayers.filter(p => !playingIds.has(p.id));
+    const [localPlan, setLocalPlan] = useState<TurnierResponse>(plan);
+    // NEU: State um zwischen Plan und Rangliste zu wechseln
+    const [showLeaderboard, setShowLeaderboard] = useState(false);
+
+    useEffect(() => {
+        setLocalPlan(plan);
+    }, [plan]);
+
+    const updateScore = (roundIndex: number, matchIndex: number, team: 'team1' | 'team2', value: string) => {
+        // TRICK: Deep Copy mit JSON, damit React die Änderung sicher erkennt!
+        // Sonst wird oft das alte Objekt ohne Punkte an das Leaderboard weitergegeben.
+        const newPlan = JSON.parse(JSON.stringify(localPlan));
+        
+        if (team === 'team1') {
+            newPlan.runden[roundIndex].matches[matchIndex].scoreTeam1 = value;
+        } else {
+            newPlan.runden[roundIndex].matches[matchIndex].scoreTeam2 = value;
+        }
+        
+        setLocalPlan(newPlan);
     };
 
-    // NEU: Hilfsfunktion zur Berechnung der Startzeit pro Runde
+    // NEU: Prüft, ob ALLE Matches einen eingetragenen Score haben
+    const checkAllScoresEntered = () => {
+        for (const runde of localPlan.runden) {
+            for (const match of runde.matches) {
+                // Wir prüfen, ob die Felder leer sind oder undefined
+                if (!match.scoreTeam1 || match.scoreTeam1 === "" || 
+                    !match.scoreTeam2 || match.scoreTeam2 === "") {
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
+
     const calculateRoundTime = (roundIndex: number) => {
         if (!startTime) return "";
-
-        // 1. Startzeit ("09:00") in Stunden und Minuten zerlegen
         const [startHour, startMinute] = startTime.split(":").map(Number);
-        
-        // 2. Startzeit in Minuten seit Mitternacht umrechnen
         const startTotalMinutes = (startHour * 60) + startMinute;
-
-        // 3. Offset berechnen: (RundenIndex) * (Spielzeit + Pause)
-        // Runde 1 (Index 0): 0 Min dazu
-        // Runde 2 (Index 1): 1x (Spiel + Pause) dazu, usw.
         const offset = roundIndex * (matchDuration + breakDuration);
-
-        // 4. Neue Gesamtminuten berechnen
         const newTotalMinutes = startTotalMinutes + offset;
-
-        // 5. Zurückrechnen in HH:MM
-        const newHour = Math.floor(newTotalMinutes / 60) % 24; // % 24 damit es nach 23 Uhr bei 0 weitergeht
+        const newHour = Math.floor(newTotalMinutes / 60) % 24;
         const newMinute = newTotalMinutes % 60;
-
-        // 6. Formatieren mit führender Null (z.B. 9 -> "09")
-        const formattedHour = String(newHour).padStart(2, "0");
-        const formattedMinute = String(newMinute).padStart(2, "0");
-
-        return `${formattedHour}:${formattedMinute}`;
+        return `${String(newHour).padStart(2, "0")}:${String(newMinute).padStart(2, "0")}`;
     };
+
+    const getPausingPlayers = (runde: RundeModel) => {
+        const playingNames = new Set<string>();
+        runde.matches.forEach(m => {
+            playingNames.add(m.team1.spieler1.name);
+            playingNames.add(m.team1.spieler2.name);
+            playingNames.add(m.team2.spieler1.name);
+            playingNames.add(m.team2.spieler2.name);
+        });
+        return allPlayers.filter(p => !playingNames.has(p.name));
+    };
+
+    // --- Conditional Rendering für die Rangliste ---
+    if (showLeaderboard) {
+        return (
+            <LeaderboardView 
+                plan={localPlan} 
+                allPlayers={allPlayers} 
+                onBack={() => setShowLeaderboard(false)} 
+            />
+        );
+    }
+
+    const allScoresReady = checkAllScoresEntered();
 
     return (
         <div className="tournament-container">
@@ -68,75 +99,86 @@ export default function TournamentView({
             </div>
 
             <div className="rounds-scroll-container">
-                {plan.runden.map((runde, index) => {
+                {localPlan.runden.map((runde, rIndex) => {
+                    const roundTime = calculateRoundTime(rIndex);
                     const pausingPlayers = getPausingPlayers(runde);
-                    // Hier berechnen wir die Zeit für die aktuelle Runde
-                    const roundTime = calculateRoundTime(index);
 
                     return (
                         <div key={runde.rundenNummer} className="round-wrapper">
-                            
-                            {/* Runden Header mit Zeit */}
                             <div className="round-header" style={{
-                                display: 'flex', 
-                                justifyContent: 'space-between', 
-                                alignItems: 'center',
-                                minWidth: '300px', // Damit Zeit und Titel nicht zu eng kleben
-                                gap: '20px'
+                                display: 'flex', justifyContent: 'space-between', alignItems: 'center', minWidth: '300px', gap: '20px'
                             }}>
                                 <h3>Runde {runde.rundenNummer}</h3>
-                                <span style={{ 
-                                    fontSize: '1rem', 
-                                    color: '#eee', 
-                                    backgroundColor: 'rgba(0,0,0,0.3)', 
-                                    padding: '4px 10px', 
-                                    borderRadius: '10px',
-                                    fontWeight: 'normal'
-                                }}>
+                                <span style={{ fontSize: '1rem', color: '#eee', backgroundColor: 'rgba(0,0,0,0.3)', padding: '4px 10px', borderRadius: '10px' }}>
                                     🕒 {roundTime} Uhr
                                 </span>
                             </div>
 
-                            {/* Grid für die Matches nebeneinander */}
                             <div className="matches-grid">
-                                {runde.matches.map((match, idx) => (
-                                    <div key={idx} className="match-card">
-                                        <div className="team-box team-1">
-                                            {match.team1.spieler1.name} & {match.team1.spieler2.name}
+                                {runde.matches.map((match, mIndex) => (
+                                    <div key={mIndex} className="match-card">
+                                        <div className="match-row">
+                                            <div className="team-box team-1">
+                                                {match.team1.spieler1.name} & {match.team1.spieler2.name}
+                                            </div>
+                                            <input 
+                                                type="number" 
+                                                className="score-input"
+                                                placeholder="0"
+                                                value={match.scoreTeam1 || ''}
+                                                onChange={(e) => updateScore(rIndex, mIndex, 'team1', e.target.value)}
+                                            />
                                         </div>
-                                        <div className="vs-badge">VS</div>
-                                        <div className="team-box team-2">
-                                            {match.team2.spieler1.name} & {match.team2.spieler2.name}
+                                        <div className="vs-badge">- VS -</div>
+                                        <div className="match-row">
+                                            <div className="team-box team-2">
+                                                {match.team2.spieler1.name} & {match.team2.spieler2.name}
+                                            </div>
+                                            <input 
+                                                type="number" 
+                                                className="score-input"
+                                                placeholder="0"
+                                                value={match.scoreTeam2 || ''}
+                                                onChange={(e) => updateScore(rIndex, mIndex, 'team2', e.target.value)}
+                                            />
                                         </div>
                                     </div>
                                 ))}
                             </div>
 
-                            {/* Anzeige der Pausierenden Spieler */}
                             {pausingPlayers.length > 0 && (
                                 <div className="pause-section">
                                     <span className="pause-title">In der Pause</span>
                                     <div className="pausing-players-list">
                                         {pausingPlayers.map(p => (
-                                            <span key={p.id} className="pause-badge">
-                                                💤 {p.name}
-                                            </span>
+                                            <span key={p.id} className="pause-badge">💤 {p.name}</span>
                                         ))}
                                     </div>
                                 </div>
                             )}
 
-                            {/* Optischer Verbinder */}
-                            {index < plan.runden.length - 1 && (
-                                <div className="round-connector"></div>
-                            )}
+                            {rIndex < localPlan.runden.length - 1 && <div className="round-connector"></div>}
                         </div>
                     );
                 })}
             </div>
             
-            <div className="button-bottom-container" style={{marginTop: '40px'}}>
+            <div className="button-bottom-container" style={{marginTop: '0'}}>
                 <button className="back-btn" onClick={onBack}>Zurück zur Eingabe</button>
+                
+                {/* NEU: Button zur Rangliste */}
+                <button 
+                    className="start-btn" 
+                    onClick={() => setShowLeaderboard(true)}
+                    disabled={!allScoresReady} // Nur aktiv, wenn alle Scores da sind
+                    style={{ 
+                        opacity: allScoresReady ? 1 : 0.5, 
+                        cursor: allScoresReady ? 'pointer' : 'not-allowed',
+                        background: allScoresReady ? 'linear-gradient(90deg, #ff8c00 0%, #ff0080 100%)' : '#444'
+                    }}
+                >
+                    {allScoresReady ? "🏆 Zur Rangliste" : "Scores eingeben..."}
+                </button>
             </div>
         </div>
     );

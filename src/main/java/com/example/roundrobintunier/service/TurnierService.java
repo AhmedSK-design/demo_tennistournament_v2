@@ -49,8 +49,12 @@ public class TurnierService {
 
             Runde optimierteRunde = solver.solveRunde(i + 1, spielerInRunde, forceMixed);
             if (optimierteRunde != null) {
+                List<Spieler> pauseInDieserRunde = pm.getPausenProRunde().get(i);
+                optimierteRunde.setPausierendeSpieler(pauseInDieserRunde);
+        
                 turnier.getRunden().add(optimierteRunde);
-            } else {
+            }
+             else {
                 throw new RuntimeException("Keine Lösung für Runde " + (i + 1));
             }
         }

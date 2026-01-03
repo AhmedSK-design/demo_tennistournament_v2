@@ -37,11 +37,16 @@ export interface TeamModel {
 export interface MatchModel {
     team1: TeamModel;
     team2: TeamModel;
+    // NEU: Ergebnisse (optional, damit es am Anfang leer sein kann)
+    scoreTeam1?: number | string; 
+    scoreTeam2?: number | string;
 }
 
 export interface RundeModel {
     rundenNummer: number;
     matches: MatchModel[];
+    // NEU: Die Liste kommt jetzt vom Backend!
+    pausierendeSpieler: SpielerModel[]; 
 }
 
 export interface TurnierResponse {
