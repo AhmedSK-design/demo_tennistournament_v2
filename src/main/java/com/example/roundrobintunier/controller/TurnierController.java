@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/turnier")
-@CrossOrigin(origins = "http://localhost:3000") // Erlaubt Zugriff vom React Frontend (Port anpassen!)
+@CrossOrigin(origins = "http://localhost:5173") // Erlaubt Zugriff vom React Frontend (Port anpassen!)
 public class TurnierController {
 
     @Autowired
