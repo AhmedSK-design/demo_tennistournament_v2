@@ -1,32 +1,29 @@
-// HandlePlayer.tsx
 import { useState } from "react";
-import TournamentView from "./TournamentView"; // Import der View
-import type { PlayerRequestDTO, TurnierRequest, TurnierResponse } from "./main/JS_Objects/types";
-// Lokales Interface nur für die UI-Eingabe
-interface LocalPlayer {
-    id: number;
-    name: string;
-    gender: string;
-    spielstärke: number;
-}
+import TournamentView from "./TournamentView"; 
+import type { PlayerRequestDTO, TurnierRequest, TurnierResponse, LocalPlayer } from "./main/JS_Objects/types"; // Pfad ggf. anpassen
 
 export default function HandlePlayer({ openPrev }: { openPrev: () => void; dataFromLayout1?: any }) {
-    // --- States ---
+    // --- States für Spieler ---
     const [name, setName] = useState("");
     const [spielstaerke, setSpielstaerke] = useState(5);
     const [selectedGender, setSelectedGender] = useState("M");
-    
     const [players, setPlayers] = useState<LocalPlayer[]>([]);
     
+    // --- States für Parameter ---
     const [tennisCourts, setTennisCourts] = useState(1);
     const [rounds, setRounds] = useState(1);
     const [forceMixed, setForceMixed] = useState(false);
+    
+    // --- States für Zeit-Management ---
+    const [startTime, setStartTime] = useState("09:00"); 
+    const [matchDuration, setMatchDuration] = useState(60); // Standard: 60 Min
+    const [breakDuration, setBreakDuration] = useState(15); // Standard: 15 Min
 
+    // --- System States ---
     const [loading, setLoading] = useState(false);
     const [tournamentPlan, setTournamentPlan] = useState<TurnierResponse | null>(null);
 
-    // --- Logik ---
-
+    // --- Logik: Spieler hinzufügen ---
     function handleAddPlayer() {
         if (name.trim() === "") return;
         
@@ -39,12 +36,15 @@ export default function HandlePlayer({ openPrev }: { openPrev: () => void; dataF
         
         setPlayers([...players, newPlayer]);
         setName(""); 
+        // Fokus könnte hier zurück aufs Input gesetzt werden
     }
 
+    // --- Logik: Spieler entfernen ---
     function handleRemovePlayer(id: number) {
         setPlayers(players.filter(p => p.id !== id));
     }
 
+    // --- Logik: Turnier starten ---
     async function handleStartTournament() {
         if (players.length < 4) {
             alert("Mindestens 4 Spieler notwendig!");
@@ -53,7 +53,6 @@ export default function HandlePlayer({ openPrev }: { openPrev: () => void; dataF
 
         setLoading(true);
 
-        // Mapping
         const spielerListeDTO: PlayerRequestDTO[] = players.map(p => ({
             name: p.name,
             geschlecht: p.gender,
@@ -90,20 +89,26 @@ export default function HandlePlayer({ openPrev }: { openPrev: () => void; dataF
         }
     }
 
-    // --- Conditional Rendering ---
+    // --- View Rendering ---
     
-    // Wenn Plan vorhanden, zeige die separate View-Komponente
     if (tournamentPlan) {
         return (
             <TournamentView 
                 plan={tournamentPlan} 
-                allPlayers={players}  // <--- DAS IST NEU: Wir übergeben alle Spieler
+                allPlayers={players}
+                // Wir übergeben die Zeit-Einstellungen an die View:
+                // @ts-ignore (Falls Props in TournamentView noch nicht definiert sind)
+                startTime={startTime}
+                // @ts-ignore
+                matchDuration={matchDuration}
+                // @ts-ignore
+                breakDuration={breakDuration}
                 onBack={() => setTournamentPlan(null)} 
             />
         );
     }
 
-    // Ansonsten: Setup Ansicht
+    // --- Setup Rendering ---
     return (
         <>
             <div className='header'>
@@ -111,7 +116,7 @@ export default function HandlePlayer({ openPrev }: { openPrev: () => void; dataF
             </div>
 
             <div className="windows-container">
-                {/* Linke Spalte */}
+                {/* Linke Spalte: Spieler Eingabe */}
                 <div className="left-column">
                     <div className="small-window">
                         <h3>Neuer Spieler</h3>
@@ -166,34 +171,78 @@ export default function HandlePlayer({ openPrev }: { openPrev: () => void; dataF
                     </div>
                 </div>
 
-                {/* Rechte Spalte */}
+                {/* Rechte Spalte: Parameter & Zeit */}
                 <div className="big-right-window">
                     <h3>Parameter</h3>
                     <div className="mini-window-right" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                        <div>
-                            <label>Anzahl Plätze: </label>
-                            <input 
-                                type="number" min="1" 
-                                value={tennisCourts} 
-                                onChange={e => setTennisCourts(Number(e.target.value))} 
-                            />
+                        
+                        {/* Basis Parameter */}
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <div style={{ flex: 1 }}>
+                                <label>Plätze: </label>
+                                <input 
+                                    type="number" min="1" 
+                                    value={tennisCourts} 
+                                    onChange={e => setTennisCourts(Number(e.target.value))} 
+                                    style={{ width: '100%' }}
+                                />
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <label>Runden: </label>
+                                <input 
+                                    type="number" min="1" 
+                                    value={rounds} 
+                                    onChange={e => setRounds(Number(e.target.value))} 
+                                    style={{ width: '100%' }}
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <label>Anzahl Runden: </label>
-                            <input 
-                                type="number" min="1" 
-                                value={rounds} 
-                                onChange={e => setRounds(Number(e.target.value))} 
-                            />
+
+                        {/* Zeit Einstellungen */}
+                        <div style={{ borderTop: '1px solid #444', paddingTop: '10px', marginTop: '5px' }}>
+                            <label style={{ color: '#aaa', fontSize: '0.9rem' }}>Zeitplan</label>
+                            
+                            <div style={{ marginTop: '5px' }}>
+                                <label>Startzeit:</label>
+                                <input 
+                                    type="time" 
+                                    value={startTime} 
+                                    onChange={e => setStartTime(e.target.value)}
+                                    style={{ marginLeft: '10px' }}
+                                />
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                                <div style={{ flex: 1 }}>
+                                    <label style={{ fontSize: '0.85rem' }}>Dauer (Min):</label>
+                                    <input 
+                                        type="number" min="1" 
+                                        value={matchDuration} 
+                                        onChange={e => setMatchDuration(Number(e.target.value))} 
+                                        style={{ width: '100%' }}
+                                    />
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <label style={{ fontSize: '0.85rem' }}>Pause (Min):</label>
+                                    <input 
+                                        type="number" min="0" 
+                                        value={breakDuration} 
+                                        onChange={e => setBreakDuration(Number(e.target.value))} 
+                                        style={{ width: '100%' }}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+
+                        {/* Checkbox */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
                             <input 
                                 type="checkbox" 
                                 id="mixedCheck" 
                                 checked={forceMixed} 
                                 onChange={e => setForceMixed(e.target.checked)} 
                             />
-                            <label htmlFor="mixedCheck">Mixed erzwingen (M/F)</label>
+                            <label htmlFor="mixedCheck">Mixed erzwingen</label>
                         </div>
                     </div>
                 </div>
