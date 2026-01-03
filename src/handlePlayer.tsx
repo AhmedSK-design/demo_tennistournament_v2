@@ -1,140 +1,50 @@
+// HandlePlayer.tsx
 import { useState } from "react";
-
-// --- 1. Schnittstellen (Interfaces) passend zum Java Backend ---
-
-// Das senden wir hin (Request)
-interface PlayerRequestDTO {
-    name: string;
-    geschlecht: string;
-    spielstaerke: number;
-}
-
-interface TurnierRequest {
-    spielerListe: PlayerRequestDTO[];
-    anzahlPlaetze: number;
-    anzahlRunden: number;
-    forceMixed: boolean;
-}
-
-// Das bekommen wir zurück (Response)
-interface SpielerModel {
-    id: number;
-    name: string;
-    geschlecht: string;
-    spielstaerke: number;
-}
-
-interface TeamModel {
-    spieler1: SpielerModel;
-    spieler2: SpielerModel;
-}
-
-interface MatchModel {
-    team1: TeamModel;
-    team2: TeamModel;
-}
-
-interface RundeModel {
-    rundenNummer: number;
-    matches: MatchModel[];
-}
-
-interface TurnierResponse {
-    runden: RundeModel[];
-    // spielerListe ist auch drin, nutzen wir aber hier gerade nicht
-}
-
-// --- 2. Sub-Komponente für die Anzeige des Plans ---
-
-function TournamentView({ plan, onBack }: { plan: TurnierResponse; onBack: () => void }) {
-    return (
-        <div className="tournament-container">
-            <div className="header">
-                <h1>Dein Turnierplan</h1>
-                <button className="back-btn" onClick={onBack}>Zurück / Neu</button>
-            </div>
-
-            <div className="rounds-scroll-container">
-                {plan.runden.map((runde) => (
-                    <div key={runde.rundenNummer} className="round-card">
-                        <h3>Runde {runde.rundenNummer}</h3>
-                        <div className="matches-list">
-                            {runde.matches.map((match, idx) => (
-                                <div key={idx} className="match-item" style={{ 
-                                    border: '1px solid #444', 
-                                    margin: '5px 0', 
-                                    padding: '10px',
-                                    borderRadius: '8px',
-                                    backgroundColor: '#2a2a2a'
-                                }}>
-                                    {/* Team 1 */}
-                                    <div style={{ color: '#4caf50', fontWeight: 'bold' }}>
-                                        {match.team1.spieler1.name} & {match.team1.spieler2.name}
-                                    </div>
-                                    <div style={{ fontSize: '0.8em', color: '#888' }}>VS</div>
-                                    {/* Team 2 */}
-                                    <div style={{ color: '#2196f3', fontWeight: 'bold' }}>
-                                        {match.team2.spieler1.name} & {match.team2.spieler2.name}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-}
-
-// --- 3. Haupt-Komponente ---
-
-// Lokales Interface für die Eingabe-Maske
+import TournamentView from "./TournamentView"; // Import der View
+import type { PlayerRequestDTO, TurnierRequest, TurnierResponse } from "./main/JS_Objects/types";
+// Lokales Interface nur für die UI-Eingabe
 interface LocalPlayer {
     id: number;
     name: string;
     gender: string;
-    spielstärke: number; // Hier nutzen wir "ä" für die UI, mappen es aber später
+    spielstärke: number;
 }
 
 export default function HandlePlayer({ openPrev }: { openPrev: () => void; dataFromLayout1?: any }) {
-    // Eingabe States
+    // --- States ---
     const [name, setName] = useState("");
     const [spielstaerke, setSpielstaerke] = useState(5);
     const [selectedGender, setSelectedGender] = useState("M");
     
-    // Listen States
     const [players, setPlayers] = useState<LocalPlayer[]>([]);
     
-    // Parameter States
     const [tennisCourts, setTennisCourts] = useState(1);
     const [rounds, setRounds] = useState(1);
     const [forceMixed, setForceMixed] = useState(false);
 
-    // System States
     const [loading, setLoading] = useState(false);
     const [tournamentPlan, setTournamentPlan] = useState<TurnierResponse | null>(null);
 
-    // Spieler hinzufügen
+    // --- Logik ---
+
     function handleAddPlayer() {
         if (name.trim() === "") return;
         
         const newPlayer: LocalPlayer = {
-            id: Date.now(), // Unique ID durch Timestamp
+            id: Date.now(),
             name: name,
             gender: selectedGender,
             spielstärke: spielstaerke
         };
         
         setPlayers([...players, newPlayer]);
-        setName(""); // Reset Name Input
+        setName(""); 
     }
 
-    // Spieler entfernen
     function handleRemovePlayer(id: number) {
         setPlayers(players.filter(p => p.id !== id));
     }
 
-    // Start-Logik (Kommunikation mit Backend)
     async function handleStartTournament() {
         if (players.length < 4) {
             alert("Mindestens 4 Spieler notwendig!");
@@ -143,11 +53,11 @@ export default function HandlePlayer({ openPrev }: { openPrev: () => void; dataF
 
         setLoading(true);
 
-        // Mapping: Frontend-Objekt -> Backend-DTO
+        // Mapping
         const spielerListeDTO: PlayerRequestDTO[] = players.map(p => ({
             name: p.name,
             geschlecht: p.gender,
-            spielstaerke: p.spielstärke // Wichtig: ä -> ae Mapping
+            spielstaerke: p.spielstärke
         }));
 
         const payload: TurnierRequest = {
@@ -170,7 +80,7 @@ export default function HandlePlayer({ openPrev }: { openPrev: () => void; dataF
             }
 
             const data: TurnierResponse = await response.json();
-            setTournamentPlan(data); // Ergebnis speichern -> Zeigt TournamentView an
+            setTournamentPlan(data); 
 
         } catch (err: any) {
             console.error(err);
@@ -180,9 +90,17 @@ export default function HandlePlayer({ openPrev }: { openPrev: () => void; dataF
         }
     }
 
-    // Wenn Plan vorhanden, zeige Plan an
+    // --- Conditional Rendering ---
+    
+    // Wenn Plan vorhanden, zeige die separate View-Komponente
     if (tournamentPlan) {
-        return <TournamentView plan={tournamentPlan} onBack={() => setTournamentPlan(null)} />;
+        return (
+            <TournamentView 
+                plan={tournamentPlan} 
+                allPlayers={players}  // <--- DAS IST NEU: Wir übergeben alle Spieler
+                onBack={() => setTournamentPlan(null)} 
+            />
+        );
     }
 
     // Ansonsten: Setup Ansicht
@@ -193,7 +111,7 @@ export default function HandlePlayer({ openPrev }: { openPrev: () => void; dataF
             </div>
 
             <div className="windows-container">
-                {/* Linke Spalte: Spieler */}
+                {/* Linke Spalte */}
                 <div className="left-column">
                     <div className="small-window">
                         <h3>Neuer Spieler</h3>
@@ -238,15 +156,17 @@ export default function HandlePlayer({ openPrev }: { openPrev: () => void; dataF
                                     <span>{p.name} ({p.gender}) <small>Lvl:{p.spielstärke}</small></span>
                                     <button 
                                         onClick={() => handleRemovePlayer(p.id)}
-                                        style={{ background: 'red', padding: '2px 8px', fontSize: '0.8rem' }}
-                                    >X</button>
+                                        className="delete-btn"
+                                    >
+                                    X
+                                    </button>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </div>
 
-                {/* Rechte Spalte: Einstellungen */}
+                {/* Rechte Spalte */}
                 <div className="big-right-window">
                     <h3>Parameter</h3>
                     <div className="mini-window-right" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
