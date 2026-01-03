@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tournament")
@@ -31,16 +33,17 @@ public class TournamentController {
     public ResponseEntity<Runde> solveNextRound(@RequestBody SolveRequest request) {
 
         // 1. DTOs in Domain-Objekte (Spieler) umwandeln
+        Map<String, Spieler> spielerMap = new HashMap<>();
         List<Spieler> spielerInRunde = new ArrayList<>();
         
         // **WICHTIGE KORREKTUR:** Wir iterieren über request.getSpielerDetails()
         for (PlayerRequestDTO dto : request.getSpielerDetails()) { 
-            spielerInRunde.add(new Spieler(
-                    dto.getName(),
-                    dto.getGeschlecht(),
-                    dto.getSpielstaerke()
-            ));
+            Spieler s = new Spieler(dto.getName(), dto.getGeschlecht(), dto.getSpielstaerke());
+            spielerInRunde.add(s);
+            spielerMap.put(dto.getName(), s);
         }
+
+        
 
         try {
             // 2. Solver mit der erstellten Liste aufrufen
