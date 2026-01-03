@@ -1,23 +1,14 @@
-/* Grund-Reset für volle Breite */
-html, body, #root {
+#root {
   width: 100%;
   margin: 0;
   padding: 0;
-  background-color: #242424;
 }
 
-/* Erzwingt den Lightmode */
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  color: #213547;            /* Dunkle Schrift */
-  background-color: #f0f2f5; /* Hellgrauer Hintergrund für die ganze Seite */
-}
-
-
-
+/* Header */
 .header {
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
   height: 80px;
   z-index: 1000;
@@ -25,17 +16,19 @@ html, body, #root {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Der Container, der die Spalten hält */
+/* Container für die Fenster (HandlePlayer Seite) */
 .windows-container {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;         /* Lässt Boxen bei Platzmangel umbrechen */
-  justify-content: center; /* Zentriert die Spalten auf dem Screen */
-  gap: 40px;               /* Großzügiger Abstand zwischen den Fenstern */
-  padding: 120px 20px;     /* Platz für Header und Footer */
+  flex-wrap: wrap;         /* Boxen rutschen bei Platzmangel untereinander */
+  justify-content: center; /* Zentriert die Fenster auf dem Schirm */
+  gap: 30px;
+  padding: 120px 20px 100px 20px;
+  width: 100%;
   box-sizing: border-box;
 }
 
@@ -44,56 +37,73 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  flex: 1 1 450px;         /* Kann wachsen und schrumpfen, Basis 450px */
-  max-width: 550px;
+  flex: 1;
+  min-width: 320px;
+  max-width: 500px;
+}
+
+/* Fenster-Karten (KEIN position: absolute mehr) */
+.small-window, .small-below-window, .big-right-window {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  color: #333;
 }
 
 .big-right-window {
-  flex: 1 1 500px;         /* Nimmt den restlichen Platz ein */
+  flex: 1.5;
+  min-width: 350px;
   max-width: 800px;
-  padding: 25px;
-  background: #9492928e;
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  height: fit-content;
 }
 
-/* Boxen-Inhalt: Sorgt dafür, dass Inputs untereinander stehen */
-.mini-window, .mini-window-right {
+/* Startseiten-Zentrierung (Mainpage) */
+.button-middle-container {
   display: flex;
-  flex-direction: column;  /* Zwingt Inputs in eine vertikale Liste */
-  gap: 15px;
-  margin-top: 15px;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Nutzt die volle Höhe für die Mitte */
+  width: 100%;
+  padding-top: 80px; /* Platz für den Header */
 }
 
-.mini-window input, .mini-window select, .mini-window-right input {
-  width: 100%;             /* Nutzt die volle Breite der Box */
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;  /* Verhindert, dass Padding die Breite sprengt */
+.button-middle-container button {
+  font-size: 1.5rem;
+  padding: 1rem 2rem;
 }
 
-/* Die Karten-Optik links */
-.small-window, .small-below-window {
-  padding: 25px;
-  background: #9492928e;
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Navigation unten */
+/* Navigation unten (HandlePlayer Seite) */
 .button-bottom-container {
   position: fixed;
   bottom: 0;
+  left: 0;
   width: 100%;
   height: 80px;
-  background: #1a1a1a;
+  background: white;
+  border-top: 1px solid #ddd;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
-  z-index: 1000;
+  z-index: 2000;
+}
+
+/* Inputs & Liste */
+.player-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+}
+
+.mini-window, .mini-window-right {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
