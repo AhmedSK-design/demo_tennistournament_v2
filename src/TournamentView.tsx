@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { TurnierResponse, LocalPlayer, RundeModel } from "./main/JS_Objects/types"; 
-import LeaderboardView from "./LeaderboardView"; // <--- IMPORTIEREN
+import LeaderboardView from "./LeaderboardView"; 
 import "./App.css";
 
 interface TournamentViewProps {
@@ -10,19 +10,20 @@ interface TournamentViewProps {
     matchDuration?: number;
     breakDuration?: number;
     onBack: () => void;
+    onExport: () => void; // <--- NEU: Funktion zum Speichern
 }
 
 export default function TournamentView({ 
     plan, 
     allPlayers, 
     onBack, 
+    onExport, // <--- NEU
     startTime = "09:00",
     matchDuration = 60,
     breakDuration = 10
 }: TournamentViewProps) {
 
     const [localPlan, setLocalPlan] = useState<TurnierResponse>(plan);
-    // NEU: State um zwischen Plan und Rangliste zu wechseln
     const [showLeaderboard, setShowLeaderboard] = useState(false);
 
     useEffect(() => {
@@ -30,8 +31,6 @@ export default function TournamentView({
     }, [plan]);
 
     const updateScore = (roundIndex: number, matchIndex: number, team: 'team1' | 'team2', value: string) => {
-        // TRICK: Deep Copy mit JSON, damit React die Änderung sicher erkennt!
-        // Sonst wird oft das alte Objekt ohne Punkte an das Leaderboard weitergegeben.
         const newPlan = JSON.parse(JSON.stringify(localPlan));
         
         if (team === 'team1') {
@@ -43,11 +42,9 @@ export default function TournamentView({
         setLocalPlan(newPlan);
     };
 
-    // NEU: Prüft, ob ALLE Matches einen eingetragenen Score haben
     const checkAllScoresEntered = () => {
         for (const runde of localPlan.runden) {
             for (const match of runde.matches) {
-                // Wir prüfen, ob die Felder leer sind oder undefined
                 if (!match.scoreTeam1 || match.scoreTeam1 === "" || 
                     !match.scoreTeam2 || match.scoreTeam2 === "") {
                     return false;
@@ -79,7 +76,6 @@ export default function TournamentView({
         return allPlayers.filter(p => !playingNames.has(p.name));
     };
 
-    // --- Conditional Rendering für die Rangliste ---
     if (showLeaderboard) {
         return (
             <LeaderboardView 
@@ -163,14 +159,26 @@ export default function TournamentView({
                 })}
             </div>
             
-            <div className="button-bottom-container" style={{marginTop: '0'}}>
+            <div className="button-bottom-container" style={{marginTop: '0', gap: '15px'}}>
                 <button className="back-btn" onClick={onBack}>Zurück zur Eingabe</button>
                 
-                {/* NEU: Button zur Rangliste */}
+                {/* NEU: Export Button */}
+                <button 
+                    className="back-btn" 
+                    onClick={onExport}
+                    style={{
+                        backgroundColor: '#2e7d32', // Excel Grün
+                        border: '1px solid #1b5e20',
+                        display: 'flex', alignItems: 'center', gap: '8px'
+                    }}
+                >
+                    💾 Plan Speichern
+                </button>
+
                 <button 
                     className="start-btn" 
                     onClick={() => setShowLeaderboard(true)}
-                    disabled={!allScoresReady} // Nur aktiv, wenn alle Scores da sind
+                    disabled={!allScoresReady}
                     style={{ 
                         opacity: allScoresReady ? 1 : 0.5, 
                         cursor: allScoresReady ? 'pointer' : 'not-allowed',

@@ -26,47 +26,6 @@ h1, h2, h3 {
   margin: 0;
 }
 
-/* --- Match Card Updates --- */
-.match-card {
-  /* ... existierende Styles ... */
-  gap: 10px; /* Mehr Abstand zwischen den Elementen */
-}
-
-.match-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.score-input {
-  width: 50px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.1rem;
-  padding: 5px;
-  margin-left: 10px;
-  background-color: #111;
-  border: 1px solid #444;
-  color: white;
-  border-radius: 5px;
-}
-
-.score-input:focus {
-  border-color: #2196f3;
-  background-color: #000;
-}
-
-/* Entfernt die kleinen Pfeile bei Number-Inputs (Browser-spezifisch) */
-.score-input::-webkit-outer-spin-button,
-.score-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.score-input[type=number] {
-  -moz-appearance: textfield;
-}
-
 /* =========================================
    MAIN LAYOUT CONTAINER (Fixiert Header/Footer)
    ========================================= */
@@ -75,11 +34,9 @@ h1, h2, h3 {
   flex-direction: column;
   height: 100vh; 
   width: 100%;
-  
-  /* HIER IST DIE ÄNDERUNG: */
-  max-width: 100%; /* Vorher 1200px -> Jetzt volle Breite */
-  margin: 0;       /* Ränder weg */
-  padding: 0;      /* Innenabstand weg */
+  max-width: 100%; 
+  margin: 0;
+  padding: 0;
 }
 
 /* --- Header --- */
@@ -291,6 +248,7 @@ button:active { transform: scale(0.98); }
   align-items: center;
   box-shadow: var(--shadow-card);
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  gap: 10px;
 }
 
 .match-card:hover {
@@ -299,10 +257,45 @@ button:active { transform: scale(0.98); }
   border-color: #777;
 }
 
+.match-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 .team-box { font-weight: bold; font-size: 1.1rem; text-align: center; }
 .team-1 { color: #4caf50; } /* Grün */
 .team-2 { color: #2196f3; } /* Blau */
 .vs-badge { font-size: 0.8rem; color: #666; margin: 5px 0; }
+
+.score-input {
+  width: 50px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 5px;
+  margin-left: 10px;
+  background-color: #111;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 5px;
+}
+
+.score-input:focus {
+  border-color: #2196f3;
+  background-color: #000;
+}
+
+/* Entfernt die kleinen Pfeile bei Number-Inputs (Browser-spezifisch) */
+.score-input::-webkit-outer-spin-button,
+.score-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.score-input[type=number] {
+  -moz-appearance: textfield;
+}
 
 /* Pause Section */
 .pause-section {
@@ -351,52 +344,11 @@ button:active { transform: scale(0.98); }
   margin-bottom: -30px;
 }
 
-/* Scrollbar Styling (Chrome/Safari) */
+/* Scrollbar Styling */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-dark); }
 ::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #777; } 
-
-/* --- Match Card Updates --- */
-.match-card {
-  /* ... existierende Styles ... */
-  gap: 10px; /* Mehr Abstand zwischen den Elementen */
-}
-
-.match-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.score-input {
-  width: 50px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.1rem;
-  padding: 5px;
-  margin-left: 10px;
-  background-color: #111;
-  border: 1px solid #444;
-  color: white;
-  border-radius: 5px;
-}
-
-.score-input:focus {
-  border-color: #2196f3;
-  background-color: #000;
-}
-
-/* Entfernt die kleinen Pfeile bei Number-Inputs (Browser-spezifisch) */
-.score-input::-webkit-outer-spin-button,
-.score-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.score-input[type=number] {
-  -moz-appearance: textfield;
-}
+::-webkit-scrollbar-thumb:hover { background: #777; }
 
 /* =========================================
    LEADERBOARD STYLES
@@ -503,4 +455,260 @@ button:active { transform: scale(0.98); }
 }
 .rank-3 .rank-badge, .rank-3 .total-points {
   color: #cd7f32;
+}
+
+/* --- EPIC MAINPAGE STYLES --- */
+
+/* Container füllt alles aus und versteckt Scrollbalken */
+.epic-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #050505;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px; /* Für 3D Effekte */
+}
+
+/* Animierter Grid Hintergrund */
+.bg-grid {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  transform: perspective(500px) rotateX(60deg);
+  animation: gridMove 20s linear infinite;
+  z-index: 1;
+}
+
+@keyframes gridMove {
+  0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+  100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+}
+
+/* Globales Leuchten im Hintergrund */
+.bg-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(255, 0, 128, 0.15) 0%, rgba(0,0,0,0) 70%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Interface Container */
+.menu-interface {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  animation: fadeIn 1.5s ease-out;
+}
+
+/* TYPOGRAPHY */
+.title-section {
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 1rem;
+  letter-spacing: 10px;
+  color: #ff8c00;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.mega-title {
+  font-size: 5rem;
+  font-weight: 900;
+  margin: 0;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  position: relative;
+  color: white;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+.gradient-text {
+  background: var(--accent-gradient); /* Nutzt deine vorhandene Variable */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* MENU GRID */
+.menu-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* DIE BUTTONS (ULTRA CARDS) */
+.ultra-card {
+  position: relative;
+  background: rgba(40, 40, 40, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  text-align: left;
+  width: 100%;
+}
+
+.ultra-card:hover {
+  transform: scale(1.05) translateX(10px);
+  background: rgba(60, 60, 60, 0.8);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.ultra-card.active {
+  border-color: #ff0080;
+  box-shadow: 0 0 20px rgba(255, 0, 128, 0.4);
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.card-icon {
+  font-size: 2rem;
+  background: rgba(255,255,255,0.1);
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.text-group h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.text-group p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.arrow {
+  margin-left: auto;
+  font-size: 1.5rem;
+  font-weight: bold;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.ultra-card:hover .arrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: #ff0080;
+}
+
+/* Secondary Button Style (Kleiner/Dunkler) */
+.ultra-card.secondary {
+  opacity: 0.7;
+  transform: scale(0.95);
+}
+
+.ultra-card.secondary:hover {
+  opacity: 1;
+  transform: scale(1);
+  border-color: #ff8c00;
+}
+
+/* Glanz-Effekt beim Hover */
+.glow-effect {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.1), 
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: 0.5s;
+  z-index: 1;
+}
+
+.ultra-card:hover .glow-effect {
+  left: 200%;
+  transition: 0.7s;
+}
+
+/* FOOTER STATUS */
+.footer-status {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #555;
+  border-top: 1px solid #222;
+  padding-top: 10px;
+}
+
+.blink {
+  animation: blinker 1.5s linear infinite;
+  color: #ff8c00;
+}
+
+@keyframes blinker {
+  50% { opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Particles (Einfache schwebende Punkte) */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  opacity: 0.3;
+  filter: blur(5px);
+  z-index: 2;
+  animation: float 10s infinite ease-in-out;
+}
+.p1 { width: 100px; height: 100px; top: 10%; left: 10%; animation-duration: 15s; }
+.p2 { width: 150px; height: 150px; bottom: 20%; right: 5%; animation-duration: 20s; }
+.p3 { width: 50px; height: 50px; top: 40%; left: 80%; animation-duration: 12s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-30px); }
 }

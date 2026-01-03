@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:5175") // Prüfe, ob dein Vite wirklich auf 5173 läuft!
+                .allowedOrigins("http://localhost:5177") // Prüfe, ob dein Vite wirklich auf 5173 läuft!
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowCredentials(true);
     }

@@ -16,6 +16,12 @@ public class PlayerRequestDTO {
     // Standardkonstruktor für JSON-Deserialisierung (wichtig für Spring)
     public PlayerRequestDTO() {}
 
+    public PlayerRequestDTO(String name, String geschlecht, int spielstaerke) {
+        this.name = name;
+        this.geschlecht = geschlecht;
+        this.spielstaerke = spielstaerke;
+    }
+
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
